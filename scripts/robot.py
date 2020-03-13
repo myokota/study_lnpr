@@ -136,7 +136,7 @@ class Camera(IdealCamera):
     def occlusion(self, relpos):
         if uniform.rvs() < self.occlusion_prob:
             ell = relpos[0] + uniform.rvs()*(self.distance_range[1] - relpos[0])
-            return np.array([ell, relpos[1]])
+            return np.array([ell, relpos[1]]).T
         else:
             return relpos
         

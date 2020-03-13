@@ -116,6 +116,8 @@ class IdealRobot:
         obs = self.sensor.data(self.pose) if self.sensor else None
         nu, omega = self.agent.decision(obs)
         self.pose = self.state_transition(nu, omega, time_interval, self.pose)
+        if self.sensor:
+            self.sensor.data(self.pose)
 
 
 # In[4]:
