@@ -53,7 +53,7 @@ class World:
     def one_step(self, i, elems, ax):
         while elems:
             elems.pop().remove()
-        time_str = "t + %.2f[s]" % (self.time_interval*i)
+        time_str = "t = %.2f[s]" % (self.time_interval*i)
         elems.append(ax.text(-4.4, 4.5, time_str, fontsize=10))
         for obj in self.objects:
             obj.draw(ax, elems)
@@ -66,13 +66,14 @@ class World:
 
 
 class IdealRobot:
-    def __init__(self, pose, agent=None, sensor=None, color="black"):
+    def __init__(self, pose, agent=None, sensor=None, color="black", orbit=True):
         self.pose = pose
         self.r = 0.2
         self.color = color
         self.agent = agent
         self.poses = [pose]
         self.sensor = sensor
+        self.orbit = orbit
     
     def draw(self, ax, elems):
         x, y, theta = self.pose
@@ -83,9 +84,10 @@ class IdealRobot:
         elems.append(ax.add_patch(c))
         
         self.poses.append(self.pose)
-        elems += ax.plot([e[0] for e in self.poses],
-                         [e[1] for e in self.poses],
-                         linewidth=0.5, color="black")
+        if self.orbit is True:
+            elems += ax.plot([e[0] for e in self.poses],
+                             [e[1] for e in self.poses],
+                             linewidth=0.5, color="black")
         
         if self.sensor and len(self.poses) > 1:
             self.sensor.draw(ax, elems, self.poses[-2])
@@ -191,7 +193,7 @@ class IdealCamera:
     def visible(self, polarpos):
         if polarpos is None:
             return False
-       
+        
         return self.distance_range[0] <= polarpos[0] <= self.distance_range[1]                 and self.direction_range[0] <= polarpos[1] <= self.direction_range[1]
     
     @classmethod
@@ -218,7 +220,7 @@ class IdealCamera:
         
 
 
-# In[8]:
+# In[11]:
 
 
 if __name__ == "__main__":
