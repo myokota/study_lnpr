@@ -161,7 +161,7 @@ class Map:
         self.landmarks = []
     
     def append_landmark(self, landmark):
-        landmark.id = len(self.landmarks) + 1
+        landmark.id = len(self.landmarks)
         self.landmarks.append(landmark)
         
     def draw(self, ax, elems):
