@@ -63,7 +63,7 @@ class Mcl:
         
         self.ml = self.particles[0]
         self.pose = self.ml.pose
-    
+        
     def set_ml(self):
         i = np.argmax([p.weight for p in self.particles])
         self.ml = self.particles[i]
@@ -77,6 +77,7 @@ class Mcl:
         for p in self.particles:
             p.observation_update(observation, self.map, 
                                  self.distance_dev_rate, self.direction_dev)
+        self.set_ml()
         self.resampling()
         
     def resampling(self):
@@ -143,6 +144,9 @@ class EstimationAgent(Agent):
         
     def draw(self, ax, elems):
         self.estimator.draw(ax, elems)
+        x, y, t = self.estimator.pose
+        s = "({:.2f}, {:.2f}, {})".format(x, y, int(t*180/math.pi)%360)
+        elems.append(ax.text(x, y+0.1, s, fontsize=8))
 
 
 # In[5]:
@@ -235,7 +239,7 @@ def test_mcl_rot_robots():
 #test_rot_robots()
 
 
-# In[10]:
+# In[13]:
 
 
 def test_mcl_trial3():
@@ -248,7 +252,7 @@ def test_mcl_trial3():
     world.append(m)
     
     initial_pose = np.array([0, 0, 0]).T
-    estimator = Mcl(m, initial_pose, 100)
+    estimator = Mcl(m, initial_pose, 5)
     a = EstimationAgent(time_interval, 0.2, 10.0/180*math.pi, estimator)
     r = Robot(initial_pose, sensor=Camera(m), agent=a, color='red')
     world.append(r)
